@@ -5,8 +5,335 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="vue.js"></script>
+    <style>
+        .input{
+            width: 400px;
+            margin-bottom: 20px;
+        }
+        select{
+            width: 400px;
+            margin-bottom: 20px;
+            height: 38px;
+        }
+        .info-box{
+            width: 420px;
+            padding: 10px;
+            margin: 30px;
+            float: left;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            
+        }
+        td,th{
+            text-align: center;
+        }
+        .table-box{
+            float: right;
+            margin: 30px;
+            width:660px;
+        }
+        #area{
+            width: 1200px;
+            margin: auto;
+            padding: auto;
+        }
+        .progress-bar{
+            color: black;
+        }
+        .form-check{
+            margin-bottom: 20px;
+            width: 400px;
+        }
+        .more-check>span{
+            margin-right: 50px;
+            
+            width: 20px;
+        }
+        .singel-check>span{
+            margin-right: 150px;
+        }
+        .sub{
+            color: white;
+            border-radius: 15px;
+            min-width: 20px;
+            padding: 2px 5px 2px 5px;
+            display: inline-block;
+        }
+        .red{
+            background-color: red;
+        }
+        .green{
+            background-color: green;
+        }
+        .yellow{
+            background-color: darkorange;
+        }
+        .blue{
+            background-color:blue;
+        }
+        .light{
+            background-color:lightseagreen;
+        }
+        .lua{
+            background-color: hotpink;
+        }
+        .title-box{
+            height: 200px;
+
+            background-color: #ddd;
+        }
+        .title-group{
+            display: inline-block;
+            margin-left: 15%;
+            height: 100px;
+            width: 300px;
+            
+            margin-top: 50px;
+        }
+        .max-title{
+            font-size: 45px;
+        }
+        .min-title{
+            font-size: 20px;
+        }
+    </style>
 </head>
+<script>
+    onload = function(){
+        let myt = {
+            data() {
+                return {
+                    maxTitle: '龙影测试46号',
+                    minTitle:'vue数据传递0',
+                };
+            },
+            template:`
+            <div class="title-box">
+                <div class="title-group">
+                    <div class="max-title">{{maxTitle}}</div>
+                    <div class="min-title">{{minTitle}}</div>
+                </div>
+            </div>
+            `,
+        };
+        let prog  = {
+            props:["arr"],
+            data() {
+                return {
+                    datas: this.arr,
+                };
+            },
+            computed:{
+                percent(){
+                    var count = 0;
+                    for(i of this.arr){
+                        if(i.age>19&&i.age<31){
+                            count++;
+                        }
+                    }
+                    if(this.arr.length==0){
+                        return 0;
+                    }
+                    return Math.floor(count/this.arr.length*100);
+                },
+            },
+            template: `
+                <div>
+                青年人占比
+                <div class="progress">
+                    <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" v-bind:style='{width:[percent+"%"]}'>
+                    {{percent}}%
+                    </div>
+                </div>
+                </div>
+            `,
+        };
+        let info  = {
+            methods:{
+                add(){
+                    if(this.name.trim()==""||this.age.trim()==""){
+                        alert("姓名或者年龄不能为空！");
+                    }
+                    else{
+                        this.$emit('put', {name:this.name,age:this.age,gender:this.gender,position:this.position,checkSub:this.checkSub});
+                    }
+                }
+            },
+            data() {
+                return {
+                    name: '',
+                    age:'',
+                    subList:["HTML","CSS","SQL","Java","Python","Lua"],
+                    checkSub:[],
+                    gender:'',
+                    pList:["技术总监","项目经理","首席框架师","小组成员","组长"],
+                    position:'',
+                };
+            },
+            template: `
+            <div class="info-box">
+                <label for="name">姓名</label>
+                <div>
+                        <input type="text" name="name" id="name" class="form-control input" v-model="name">
+                </div>
+                <label for="age">年龄</label>
+                <div>
+                        <input type="text" name="age" id="age" class="form-control input" v-model="age">
+                </div>
+                <label for="position">职位</label>
+                <div>
+                    <select name="" id="position" class="form-select" v-model="position">
+                        <option v-for="p in pList" :value="p" >{{p}}</option>
+                    </select>
+                </div>
+                <label >性别</label>
+                <div class="form-check singel-check">
+                    <span>
+                        <input class="form-check-input radio" type="radio" name="gender" id="man" value="男" v-model="gender">
+                        <label class="form-check-label" for="man">男</label>
+                    </span>
+                   
+                    <span>
+                        <input class="form-check-input radio" type="radio" name="gender" id="woman" value="女" v-model="gender">
+                        <label class="form-check-label" for="woman">女</label>
+                    </span>
+                </div>
+                <label >专业技能</label>
+                <div class="form-check more-check">
+                   <span v-for="sub in subList" >
+                        <input class="form-check-input" type="checkbox" :value="sub" :id="sub" v-model="checkSub">
+                        <label class="form-check-label" :for="sub">
+                            {{sub}}
+                        </label>
+                    </span>
+                </div>
+                <div>
+                    <input type="submit" name="age" id="age" class="btn btn-primary input" value="提交信息" @click="add">
+                </div>
+               
+            </div>
+            `,
+        };
+        let show  = {
+            props:["arr"],
+            
+            methods:{
+                del(index){
+                     this.$emit('del', index);
+                     this.selectIndex = -1;
+                },
+                edit(index,name){
+                    if(index!=this.selectIndex){
+                        this.nowReName = name;
+                        this.selectIndex = index;
+                    }
+                   
+                    else{
+                        this.$emit('edit',{index:index,name:this.nowReName});
+                        this.selectIndex = -1;
+                    }
+                    
+                },
+                changeStatus(a){
+                    
+                    if(this.selectIndex == a){
+                        return true
+                    }
+                    return false;
+                },
+            },
+            data() {
+                return {
+                    datas: this.arr,
+                    selectIndex:-1,
+                };
+            },
+            computed:{
+                status(){
+                    return function (a){ 
+                        if(this.selectIndex == a){
+                            return true
+                        }
+                        return false;
+                    }
+                },
+                
+            },
+            watch:{
+                datas(){
+                    this.selectIndex = -1;
+                }
+            },
+            template: `
+            <div class="table-box">
+                <table class="table table-hover">
+                    <thead>
+                        <th>姓名</th>
+                        <th>年龄</th>
+                        <th>性别</th>
+                        <th>职位</th>
+                        <th>技能</th>
+                        <th>操作</th>
+                    </thead>
+
+                    <tr v-for="i,j in datas">
+                        <td>
+                            <input type="text"  v-if="changeStatus(j)" class="change" v-model="nowReName" />
+                            <span v-else>{{i.name}}</span>
+                            
+                        </td>
+                        <td>{{i.age}}</td>
+                        <td >{{i.gender}}</td>
+                        <td>{{i.position}}</td>
+                        <td>
+                            <span v-for="k in i.checkSub" :class="['sub',{red:k=='HTML',green:k=='CSS',yellow:k=='SQL',light:k=='Java',blue:k=='Python',lua:k=='Lua'}]">
+                                {{k}}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" :class="['btn','btn-sm',{'btn-outline-success':!changeStatus(j),'btn-outline-warning':changeStatus(j)}]" @click="edit(j,i.name)">{{status(j)?"更新":"修改"}}</button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" @click="del(j)">删除</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            `,
+        };
+        let v = new Vue({
+            el:"#area",
+            components:{
+                "prog":prog,
+                "info":info,
+                "show":show,
+                "myt":myt
+            },
+            data:{
+                datas:[],
+            },
+            methods:{
+                add(a){
+                    this.datas.push(a);
+                },
+                
+                del(index){
+                    this.datas.splice(index,1);
+                },
+                edit(line){
+                    this.datas[line.index].name = line.name;
+                },
+                
+            },
+        });
+    }
+</script>
 <body>
-    555
+    <div id="area">
+        <myt></myt>
+        <prog :arr="datas"></prog>
+        <info @put="add"></info>
+        <show :arr="datas" @edit="edit"  @del="del"></show>
+    </div>
 </body>
 </html>
